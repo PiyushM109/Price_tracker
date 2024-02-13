@@ -15,7 +15,6 @@ function extractCurrency(element) {
 }
 
 function dataExtractor(response,url){
-    console.log("Piyush1");
     const $ = cheerio.load(response.data);
     const title = $("#productTitle").text().trim();
     // const currPrice = $(".priceToPay span.a-price-whole").text().trim();
@@ -62,7 +61,6 @@ function dataExtractor(response,url){
       lowestPrice : Number(currPrice),
       highestPrice : Number(originalPrice)
     }
-    console.log("Piyush2")
     return data;
 }
 

@@ -8,11 +8,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// main().catch(err => console.log(err));
+main().then(()=>{
+  console.log("connected to DB");
+}).catch(err => console.log(err));
 
-// async function main() {
-//   await mongoose.connect('mongodb://127.0.0.1:27017/test');
-// }
+async function main() {
+  await mongoose.connect('mongodb://127.0.0.1:27017/PriceTracker');
+}
 
 app.get("/scrape", async (req, res) => {
   const url = req.query.url;
