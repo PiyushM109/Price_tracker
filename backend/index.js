@@ -3,6 +3,8 @@ const axios = require("axios");
 const cors = require("cors");
 const mongoose = require('mongoose');
 const dataExtractor = require("./extractor.js")
+const Product = require("./models/amazonProduct.js")
+const {getLowestPrice, getHighestPrice, getAveragePrice} = require("./utils.js")
 
 const app = express();
 app.use(cors());
@@ -37,12 +39,49 @@ app.get("/scrape", async (req, res) => {
   try {
     const response = await axios.get(url, options);
     const data = await dataExtractor(response,url);
-    // console.log(data);
+    console.log(data);
+    let productData ={ ...data};
+    console.log(productData);
+    const existingProduct = await Product.findOne({url:data.url});
+    console.log(existingProduct);
+
+    if(existingProduct){
+      let updatedPriceHistory = existingProduct.priceHistory.push({
+        price:data.currPrice,
+        date : Date.now()
+      })
+        
+      
+      // console.log(existingProduct.priceHistory);
+    
+      
+        existingProduct.lowestPrice = getLowestPrice(existingProduct.priceHistory),
+        existingProduct.highestPrice = getHighestPrice(existingProduct.priceHistory),
+        existingProduct.averagePrice = getAveragePrice(existingProduct.priceHistory)
+     
+      console.log(existingProduct);
+      productData = existingProduct;
+      console.log(productData);
+    }
+    
+
+    const newProduct = await Product.findOneAndUpdate({ url:data.url},
+      productData,
+      {upsert:true,new:true}
+    );
+
+    console.log(newProduct);
+
     res.send(data);
   } catch (e) {
     res.send(`Failed to scrape product: ${e}`);
   }
 });
+
+app.get("/allProduct", async(req,res)=>{
+    const allProduct = await Product.find({});
+    res.send(allProduct);
+})
 
 app.listen(3000, () => {
   console.log(`Proxy server is running on port 3000`);

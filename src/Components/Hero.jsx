@@ -48,20 +48,19 @@ const Hero = () => {
       style={{
         marginTop: "3rem",
         marginLeft: "1rem",
-        marginRight: "1rem",
         display: "flex",
         justifyContent: "space-evenly",
         flexWrap: "wrap",
       }}
     >
       <div>
-        <div style={{ display: "flex", flexWrap: "nowrap", color: "" }}>
+        <div style={{ display: "flex", flexWrap: "nowrap",}}>
           <Typography>Track price of your favorite product</Typography>
           <ArrowForwardIcon />
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", color: "" }}>
-          <Typography mt={2} style={{ fontSize: "1.5rem" }}>
-            <h1>
+          <Typography mt={2} style={{ fontSize: "1.5rem", fontFamily:"bold"}}>
+            <h1 className="font-bold">
               Unleash the power of<br></br>
               <span
                 style={{
@@ -69,11 +68,10 @@ const Hero = () => {
                   fontFamily: "bold",
                   fontSize: "3rem",
                 }}
-              >
-                {" "}
-                Web Scrapping{" "}
-              </span>{" "}
-              and{" "}
+
+              >{" "}Web Scrapping{" "} 
+              </span>
+              and{" "}<br></br>
               <span
                 style={{
                   color: "#616161",

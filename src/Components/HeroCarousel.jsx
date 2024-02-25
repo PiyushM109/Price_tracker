@@ -6,9 +6,9 @@ function HeroCarousel() {
     <div style={{ maxWidth: "500px", borderRadius: "30px" }}>
       <Carousel
         showThumbs={false}
-        // autoPlay
-        // infiniteLoop
-        // interval={2500}
+        autoPlay
+        infiniteLoop
+        interval={2500}
         showArrows={false}
         showStatus={false}
       >

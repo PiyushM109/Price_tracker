@@ -53,7 +53,7 @@ function dataExtractor(response,url){
       title,
       currPrice :Number(currPrice) || Number(originalPrice) ,
       originalPrice : Number(originalPrice) || Number(currPrice),
-      prceHistory : [],
+      priceHistory : [],
       discountRate : Number(discountRate),
       reviewsCount : 578,
       stars : 4.2,
