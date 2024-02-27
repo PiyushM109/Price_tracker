@@ -81,6 +81,18 @@ app.get("/scrape", async (req, res) => {
 app.get("/allProduct", async(req,res)=>{
     const allProduct = await Product.find({});
     res.send(allProduct);
+});
+
+app.get("/product/:id",async (req,res)=>{
+  const {id} = req.params;
+ try{
+  const product = await Product.findById(id);
+  if(product){
+    res.send(product);
+  }
+ }catch(err){
+  res.sendStatus(404);
+ }
 })
 
 app.listen(3000, () => {
