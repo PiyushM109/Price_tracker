@@ -1,6 +1,6 @@
 const ProductCard = ({ product }) => {
   return (
-    <div className="m-4 p-1 w-[300px] h-[400px] bg-slate-50 rounded-xl drop-shadow-sm hover:cursor-pointer">
+    <div className="m-4 p-1 w-[300px] h-[400px] bg-white rounded-xl drop-shadow-sm hover:cursor-pointer">
       <img
         className="w-[80%] h-[50%] mx-auto my-3 rounded-2xl drop-shadow-sm"
         alt="Product Image"

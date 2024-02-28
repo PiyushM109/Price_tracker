@@ -17,7 +17,7 @@ function GetAllProducts() {
   }, []);
   return (
     <div className="w-[100%]">
-      <div className="w-10/12 bg-slate-100 m-auto">
+      <div className="w-10/12 m-auto">
         <h1 className="mx-4 font-serif text-base font-semibold">
           Trending Products🔥
         </h1>
