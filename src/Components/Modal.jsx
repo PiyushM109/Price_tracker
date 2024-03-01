@@ -2,25 +2,36 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import CloseIcon from "@mui/icons-material/Close";
-import EmailIcon from '@mui/icons-material/Email';
+import EmailIcon from "@mui/icons-material/Email";
+import axios from "axios";
 // 3.12
 
-
-
-export default function Modal() {
+export default function Modal({ prodId }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
 
-  const handleSubmit = async(e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+    let data = {
+      userEmail: email,
+      prodId: prodId,
+    };
 
-    setEmail("");
-    isSubmitting("false");
-    closeModal();
-  }
+    axios
+      .post("http://localhost:3000/product/addEmail", data)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+      setEmail("");
+      setIsSubmitting(false);
+      closeModal();
+  };
 
   function closeModal() {
     setIsOpen(false);
@@ -93,28 +104,26 @@ export default function Modal() {
                       Email Address
                     </label>
                     <div className="flex flex-nowrap">
-                        <EmailIcon className="text-sm m-1 text-gray-500"/>
-                        <input
-                            required
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(e)=> setEmail(e.target.value)}
-                            placeholder="Enter Your Email Address"
-                            className="w-full px-1"
-                        ></input>
+                      <EmailIcon className="text-sm m-1 text-gray-500" />
+                      <input
+                        required
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter Your Email Address"
+                        className="w-full px-1"
+                      ></input>
                     </div>
                     <div className="mt-4">
-                    <button
-                      type="submit"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    >
-                      {isSubmitting ? "Submitting..." : "Track"}
-                    </button>
-                  </div>
+                      <button
+                        type="submit"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      >
+                        {isSubmitting ? "Submitting..." : "Track"}
+                      </button>
+                    </div>
                   </form>
-
-                  
                 </Dialog.Panel>
               </Transition.Child>
             </div>

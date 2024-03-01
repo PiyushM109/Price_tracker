@@ -106,7 +106,7 @@ const ProductPage = () => {
               price={productInfo.highestPrice>productInfo.originalPrice ? productInfo.highestPrice : productInfo.originalPrice}
             />
           </div>
-          <div><Modal /></div>
+          <div><Modal prodId={productInfo?._id}/></div>
         </div>
       </div>
       <hr className="h-2"/>

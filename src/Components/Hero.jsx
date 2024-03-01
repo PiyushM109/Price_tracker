@@ -36,10 +36,14 @@ const Hero = () => {
     try {
       setIsLoading(true);
       const product = await scrapeAndStoreProduct(searchProduct);
+      console.log(product);
+      if(product){
+        console.log("Piyush");
+      }
     } catch (e) {
       console.log(e);
     } finally {
-
+      setIsLoading(false);
       setSearchProduct("");
     }
   };
