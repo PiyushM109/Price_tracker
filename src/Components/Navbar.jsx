@@ -6,11 +6,13 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
+import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined";
 import SearchIcon from "@mui/icons-material/Search";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -18,6 +20,7 @@ export default function Navbar() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const navigate = useNavigate();
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -36,6 +39,7 @@ export default function Navbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -76,19 +80,10 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size="large"  color="inherit">
-          <SearchIcon />
+        <IconButton size="large" color="inherit">
+          <FormatListBulletedIcon />
         </IconButton>
-        <p>Search</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          color="inherit"
-        >
-          <FavoriteBorderOutlinedIcon />
-        </IconButton>
-        <p>Favorite</p>
+        <p>All Products</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -106,17 +101,20 @@ export default function Navbar() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1,}}>
-      <AppBar position="static" style={{backgroundColor:"#e0e0e0", borderRadius:"10px"}}>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar
+        position="static"
+        style={{ backgroundColor: "#e0e0e0", borderRadius: "10px" }}
+      >
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="black"
-          >
+          <IconButton size="large" edge="start" color="black">
             <QueryStatsOutlinedIcon />
           </IconButton>
           <Typography
+            onClick={() => {
+              navigate("/");
+            }}
+            className="hover:cursor-pointer"
             variant="h6"
             noWrap
             component="div"
@@ -131,15 +129,11 @@ export default function Navbar() {
               size="large"
               aria-label="show 4 new mails"
               color="black"
-            >
-              <SearchIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="black"
-            >
-              <FavoriteBorderOutlinedIcon />
+              // onClick={getAllProduct}
+            > 
+            <p className="text-sm font-semibold">
+                All-products
+              </p>
             </IconButton>
             <IconButton
               size="large"

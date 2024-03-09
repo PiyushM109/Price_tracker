@@ -10,6 +10,7 @@ export default function Modal({ prodId }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,14 +24,15 @@ export default function Modal({ prodId }) {
       .post("http://localhost:3000/product/addEmail", data)
       .then((response) => {
         console.log(response);
+        setMessage("");
+        setEmail("");
+        setIsSubmitting(false);
+        closeModal();
       })
       .catch((err) => {
-        console.log(err);
+        setMessage(err?.response?.data.message);
+        setIsSubmitting(false);
       });
-
-      setEmail("");
-      setIsSubmitting(false);
-      closeModal();
   };
 
   function closeModal() {
@@ -114,6 +116,9 @@ export default function Modal({ prodId }) {
                         placeholder="Enter Your Email Address"
                         className="w-full px-1"
                       ></input>
+                    </div>
+                    <div className="text-xs text-red">
+                      <p>{message}</p>
                     </div>
                     <div className="mt-4">
                       <button

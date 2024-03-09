@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const dotenv = require('dotenv')
 
 const THRESHOLD_PERCENTAGE = 60;
 
@@ -79,7 +80,7 @@ const transporter = nodemailer.createTransport({
     port : 2525,
     auth : {
         user : 'piyushmore2311@hotmail.com',
-        pass : process.env.EMAIL_PASSWORD,
+        pass : "Piyush@109",
     },
     maxConnections : 1,
 })

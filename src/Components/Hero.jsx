@@ -5,10 +5,12 @@ import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import scrapeAndStoreProduct from "../../lib/actions";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
   const [searchProduct, setSearchProduct] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const isValidAmazonUrl = (link) => {
     try {
       const parsedUrl = new URL(link);
@@ -38,6 +40,7 @@ const Hero = () => {
       const product = await scrapeAndStoreProduct(searchProduct);
       console.log(product);
       if(product){
+        navigate(`/product/${product?._id}`);
         console.log("Piyush");
       }
     } catch (e) {

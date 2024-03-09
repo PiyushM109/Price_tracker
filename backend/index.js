@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const {dataExtractor} = require("./extractor.js");
 const Product = require("./models/amazonProduct.js");
+const dotenv = require('dotenv')
 const cron = require('node-cron');
 const {
   getLowestPrice,
@@ -119,7 +120,7 @@ app.post("/product/addEmail", async (req, res) => {
     const emailExists = doc.users.some(user => user.email === userEmail);
     if (emailExists) {
       console.log('Email already exists in the users array');
-      res.send({ message: 'Email already exists in the users array' }); // Send response here
+      res.status(500).send({ message: 'Email already exists in the users array' }); // Send response here
       return;
     } else {
       // Step 3: If email doesn't exist, add it to the users array

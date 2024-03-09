@@ -45,7 +45,7 @@ const ProductPage = () => {
           <h1 className="font-bold font-serif my-2 text-xl text-wrap">
             {productInfo.title}
           </h1>
-          <a className="bg-slate-50 inline-block my-3 py-1 px-2 rounded-lg hover:cursor-pointer">
+          <a className="bg-slate-50 inline-block my-3 py-1 px-2 rounded-lg hover:cursor-pointer" href={productInfo.url} target="_blank">
             Visit Product
           </a>
           <div className="my-2">
@@ -112,7 +112,9 @@ const ProductPage = () => {
       <hr className="h-2"/>
       <div className="flex justify-center p-2">
         <div className="inline-block bg-black text-white py-2 px-6 rounded-full hover:cursor-pointer hover:bg-slate-800">
-        <LocalMallIcon /> Buy Now
+        <LocalMallIcon /> <a  href={productInfo.url} target="_blank">
+            Buy Now
+          </a>
         </div>
       </div>
     </div>
