@@ -4,7 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const {dataExtractor} = require("./extractor.js");
 const Product = require("./models/amazonProduct.js");
-const dotenv = require('dotenv')
+const dotenv = require('dotenv').config()
 const cron = require('node-cron');
 const {
   getLowestPrice,
@@ -24,8 +24,10 @@ main()
   })
   .catch((err) => console.log(err));
 
+  // console.log(())
+
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/PriceTracker");
+  await mongoose.connect(process.env.DBLINK);
 }
 
 app.get("/scrape", async (req, res) => {
