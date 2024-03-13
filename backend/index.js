@@ -30,6 +30,8 @@ async function main() {
   await mongoose.connect(process.env.DBLINK);
 }
 
+
+
 app.get("/scrape", async (req, res) => {
   const url = req.query.url;
   console.log(url);
