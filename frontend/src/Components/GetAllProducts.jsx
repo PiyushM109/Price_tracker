@@ -7,7 +7,7 @@ function GetAllProducts() {
   const [products, setProducts] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:3000/allProduct")
+      .get("https://price-tracker-server-cyan.vercel.app/allProduct")
       .then((response) => {
         setProducts(response.data);
       })

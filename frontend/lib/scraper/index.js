@@ -5,7 +5,7 @@ const scrapeAmazonProduct = async (url) => {
   }
 
   try {
-    const response = await axios.get(`http://localhost:3000/scrape?url=${url}`);
+    const response = await axios.get(`https://price-tracker-server-cyan.vercel.app/scrape?url=${url}`);
     return response.data;
   } catch (e) {
     throw new Error(`Failed to scrape product: ${e.message}`);

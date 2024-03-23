@@ -21,7 +21,7 @@ export default function Modal({ prodId }) {
     };
 
     axios
-      .post("http://localhost:3000/product/addEmail", data)
+      .post("https://price-tracker-server-cyan.vercel.app/product/addEmail", data)
       .then((response) => {
         console.log(response);
         setMessage("");

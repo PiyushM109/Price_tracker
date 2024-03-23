@@ -19,7 +19,7 @@ const ProductPage = () => {
   const { prodId } = useParams();
   useEffect(() => {
     axios
-      .get("http://localhost:3000/product/" + prodId)
+      .get("https://price-tracker-server-cyan.vercel.app/product/" + prodId)
       .then((response) => {
         console.log(response.data);
         setProductInfo(response.data);
