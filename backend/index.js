@@ -1,36 +1,21 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
-const mongoose = require("mongoose");
-const {dataExtractor} = require("./extractor.js");
+const { dataExtractor } = require("./extractor.js");
 const Product = require("./models/amazonProduct.js");
-const dotenv = require('dotenv').config()
-const cron = require('node-cron');
+const dotenv = require("dotenv").config();
+const cron = require("node-cron");
+const connectDB = require("./services/DB_Connect.js");
 const {
   getLowestPrice,
   getHighestPrice,
   getAveragePrice,
 } = require("./utils.js");
-const { generateEmailBody,sendEmail } = require("./nodeMailer/node_mailer.js");
+const { generateEmailBody, sendEmail } = require("./nodeMailer/node_mailer.js");
 const { updater } = require("./cron/rout.js");
-
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-main()
-  .then(() => {
-    console.log("connected to DB");
-  })
-  .catch((err) => console.log(err));
-
-  // console.log(())
-
-async function main() {
-  await mongoose.connect(process.env.DBLINK);
-}
-
-
 
 app.get("/scrape", async (req, res) => {
   const url = req.query.url;
@@ -117,43 +102,51 @@ app.get("/product/:id", async (req, res) => {
 app.post("/product/addEmail", async (req, res) => {
   const { userEmail, prodId } = req.body;
   Product.findById(prodId)
-  .then(async doc => {
-    if (!doc) {
-      throw new Error('Document not found');
-    }
-    const emailExists = doc.users.some(user => user.email === userEmail);
-    if (emailExists) {
-      console.log('Email already exists in the users array');
-      res.status(500).send({ message: 'Email already exists in the users array' }); // Send response here
-      return;
-    } else {
-      // Step 3: If email doesn't exist, add it to the users array
-      doc.users.push({ email: userEmail });
-    }
-    const emailContent = await generateEmailBody(doc,"WELCOME");
-    console.log(emailContent);
-    await sendEmail(emailContent,[userEmail]);
-    return doc.save();
-  })
-  .then(updatedDoc => {
-    if (updatedDoc) {
-      console.log('User email added to users array:', updatedDoc);
-      res.send(updatedDoc); // Send response here
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    res.status(500).send({ error: 'Internal server error' }); // Send error response here
-  });
-
+    .then(async (doc) => {
+      if (!doc) {
+        throw new Error("Document not found");
+      }
+      const emailExists = doc.users.some((user) => user.email === userEmail);
+      if (emailExists) {
+        console.log("Email already exists in the users array");
+        res
+          .status(500)
+          .send({ message: "Email already exists in the users array" }); // Send response here
+        return;
+      } else {
+        // Step 3: If email doesn't exist, add it to the users array
+        doc.users.push({ email: userEmail });
+      }
+      const emailContent = await generateEmailBody(doc, "WELCOME");
+      console.log(emailContent);
+      await sendEmail(emailContent, [userEmail]);
+      return doc.save();
+    })
+    .then((updatedDoc) => {
+      if (updatedDoc) {
+        console.log("User email added to users array:", updatedDoc);
+        res.send(updatedDoc); // Send response here
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      res.status(500).send({ error: "Internal server error" }); // Send error response here
+    });
 });
 
 // cron.schedule("*/2 * * * *", updater);
 
 // updater();
 
+const main = async () => {
+  try {
+    await connectDB();
+    app.listen(3000, () => {
+      console.log(`Proxy server is running on port 3000`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-
-app.listen(3000, () => {
-  console.log(`Proxy server is running on port 3000`);
-});
+main();
