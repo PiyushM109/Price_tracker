@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const dotenv = require('dotenv')
+require('dotenv').config();
 
 const THRESHOLD_PERCENTAGE = 60;
 

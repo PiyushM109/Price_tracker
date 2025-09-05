@@ -43,7 +43,8 @@ const productSchema = mongoose.Schema(
     isOutOfStock: { type: Boolean, default: false },
     users: [
       {
-        email: { type: String, required: true },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
       },
     ],
   },

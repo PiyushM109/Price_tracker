@@ -1,4 +1,4 @@
-const { Notification, THRESHOLD_PERCENTAGE }  = require("./nodeMailer/node_mailer");
+const { Notification, THRESHOLD_PERCENTAGE }  = require("../nodeMailer/node_mailer");
 
 function getLowestPrice(nums) {
     // console.log(nums);
@@ -17,7 +17,7 @@ function getHighestPrice(nums){
 
     for (let i = 1; i < nums.length; i++) {
         if (nums[i].price > max) {
-            min = nums[i].price;
+            max = nums[i].price;
         }
     }
     return max;
