@@ -6,18 +6,18 @@ const {
   getUserProducts,
   addEmail,
 } = require("../controllers/dataController.js");
-
+const verifyToken = require("../middlewares/Jwt_middlewares.js");
 
 const dataRouter = Router();
 
-dataRouter.get("/scrape", scrapeData);
+dataRouter.get("/scrape", verifyToken, scrapeData);
 
 dataRouter.get("/allProduct", getAllProducts);
 
-dataRouter.get("/product/:id", getProductById);
+dataRouter.get("/product/:id", verifyToken, getProductById);
 
-dataRouter.get("/user/products", getUserProducts);
+dataRouter.get("/user/products", verifyToken, getUserProducts);
 
-dataRouter.post("/product/addEmail", addEmail);
+dataRouter.post("/product/addEmail", verifyToken, addEmail);
 
 module.exports = dataRouter;

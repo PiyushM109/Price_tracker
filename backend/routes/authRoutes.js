@@ -1,5 +1,7 @@
 const Router = require("express");
 const passport = require("passport");
+const { googleOauth, getUser } = require("../controllers/authController");
+const verifyToken = require("../middlewares/Jwt_middlewares");
 
 const authRouter = Router();
 
@@ -11,10 +13,7 @@ authRouter.get(
 authRouter.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
-  (req, res) => {
-    // Successful authentication, redirect to home
-    res.redirect("http://localhost:5173/products");
-  }
+  googleOauth
 );
 
 authRouter.get("/logout", (req, res) => {
@@ -23,12 +22,6 @@ authRouter.get("/logout", (req, res) => {
   });
 });
 
-authRouter.get("/user", (req, res) => {
-  if (req.user) {
-    res.send(req.user);
-  } else {
-    res.status(401).send({ message: "Not authenticated" });
-  }
-});
+authRouter.get("/user", verifyToken, getUser);
 
 module.exports = authRouter;

@@ -11,9 +11,10 @@ const {
   generateEmailBody,
   sendEmail,
 } = require("../nodeMailer/node_mailer.js");
-const scrapeData = async (req, res) => {
+
+const scrapeData = async (req, res, next) => {
   const url = req.query.url;
-  console.log(url);
+  // console.log(url);
   const username = String(process.env.BRIGHT_DATA_USERNAME);
   const password = String(process.env.BRIGHT_DATA_PASSWORD);
 
@@ -32,11 +33,11 @@ const scrapeData = async (req, res) => {
   try {
     const response = await axios.get(url, options);
     const data = await dataExtractor(response, url);
-    console.log(data);
+    // console.log(data);
     let productData = { ...data };
-    console.log(productData);
+    // console.log(productData);
     const existingProduct = await Product.findOne({ url: data.url });
-    console.log(existingProduct);
+    // console.log(existingProduct);
 
     if (existingProduct) {
       let updatedPriceHistory = existingProduct.priceHistory.push({
@@ -56,9 +57,9 @@ const scrapeData = async (req, res) => {
           existingProduct.priceHistory
         ));
 
-      console.log(existingProduct);
+      // console.log(existingProduct);
       productData = existingProduct;
-      console.log(productData);
+      // console.log(productData);
     }
 
     const newProduct = await Product.findOneAndUpdate(
@@ -70,58 +71,73 @@ const scrapeData = async (req, res) => {
     // If user is authenticated, add product to their tracked products
     if (req.user) {
       // Add user to product's users array if not already there
-      if (!newProduct.users.includes(req.user._id)) {
-        newProduct.users.push(req.user._id);
+      if (!newProduct.users.includes(req.user.id)) {
+        newProduct.users.push(req.user.id);
         await newProduct.save();
       }
 
       // Add product to user's products array if not already there
-      const user = await User.findById(req.user._id);
+      const user = await User.findById(req.user.id);
       if (!user.products.includes(newProduct._id)) {
         user.products.push(newProduct._id);
         await user.save();
       }
     }
 
-    console.log(newProduct);
+    // console.log(newProduct);
 
     res.send(newProduct);
   } catch (e) {
     console.log(e);
-    res.send(`Failed to scrape product: ${e}`);
+    next(e);
   }
 };
 
-const getAllProducts = async (req, res) => {
-  const allProduct = await Product.find({});
-  res.send(allProduct);
+const getAllProducts = async (req, res, next) => {
+  try {
+    const allProducts = await await Product.find()
+      .sort({ createdAt: -1 }) 
+      .limit(6);
+    res.status(200).json({
+      success: true,
+      allProducts,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getProductById = async (req, res) => {
-  const { id } = req.params;
+const getProductById = async (req, res, next) => {
   try {
+    const { id } = req.params;
     const product = await Product.findById(id);
-    if (product) {
-      res.send(product);
+    if (!product) {
+      const error = new Error("product not found");
+      error.status = 404;
+      throw error;
     }
+    res.status(200).json({
+      success: true,
+      product,
+    });
   } catch (err) {
-    res.sendStatus(404);
+    next(err);
   }
 };
 
-const getUserProducts = async (req, res) => {
-  if (!req.user) {
-    return res.status(401).send({ message: "Not authenticated" });
-  }
-
+const getUserProducts = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user._id).populate("products");
-    res.send(user.products);
+    const user = await User.findById(req.user.id).populate("products");
+    res.status(200).json({
+      success: true,
+      products: user.products,
+    });
   } catch (err) {
-    res.status(500).send({ error: "Failed to fetch user products" });
+    next(err);
   }
 };
 
+//need to work on this
 const addEmail = async (req, res) => {
   const { userEmail, prodId } = req.body;
   Product.findById(prodId)

@@ -2,7 +2,16 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import { Menu, User, Home, Package, Info, LogIn, LogOut, Plus } from "lucide-react";
+import {
+  Menu,
+  User,
+  Home,
+  Package,
+  Info,
+  LogIn,
+  LogOut,
+  Plus,
+} from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,26 +20,26 @@ const Navbar = () => {
 
   useEffect(() => {
     // Check if user is logged in
-    fetch("http://localhost:3000/auth/user", { credentials: "include" })
-      .then(res => res.json())
-      .then(data => {
+    fetch("/auth/user", { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
         if (data._id) {
           setUser(data);
         }
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }, []);
 
   const handleLogout = () => {
-    fetch("http://localhost:3000/auth/logout", { 
+    fetch("/auth/logout", {
       method: "GET",
-      credentials: "include"
+      credentials: "include",
     })
-    .then(() => {
-      setUser(null);
-      navigate("/");
-    })
-    .catch(err => console.log(err));
+      .then(() => {
+        setUser(null);
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   const navItems = [
@@ -43,7 +52,7 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 w-full border-b border-dark-700/50 bg-dark-900/80 backdrop-blur-lg">
       <div className="container flex h-16 items-center justify-between px-4">
         {/* Logo and Brand */}
-        <div 
+        <div
           className="flex items-center space-x-2 cursor-pointer group"
           onClick={() => navigate("/")}
         >
@@ -70,7 +79,7 @@ const Navbar = () => {
               </Button>
             );
           })}
-          
+
           {user && (
             <Button
               variant="ghost"
@@ -88,16 +97,16 @@ const Navbar = () => {
         <div className="flex items-center space-x-2">
           {user ? (
             <>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="icon"
                 className="text-gray-300 hover:text-white hover:bg-dark-800/50 rounded-lg transition-all duration-300"
                 onClick={() => navigate("/products")}
               >
                 <User className="h-5 w-5" />
               </Button>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="icon"
                 className="text-gray-300 hover:text-white hover:bg-dark-800/50 rounded-lg transition-all duration-300"
                 onClick={handleLogout}
@@ -106,8 +115,8 @@ const Navbar = () => {
               </Button>
             </>
           ) : (
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               size="icon"
               className="text-gray-300 hover:text-white hover:bg-dark-800/50 rounded-lg transition-all duration-300"
               onClick={() => navigate("/login")}
@@ -115,12 +124,12 @@ const Navbar = () => {
               <LogIn className="h-5 w-5" />
             </Button>
           )}
-          
+
           {/* Mobile Menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="icon"
                 className="md:hidden text-gray-300 hover:text-white hover:bg-dark-800/50 rounded-lg transition-all duration-300"
               >
@@ -128,7 +137,10 @@ const Navbar = () => {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-dark-900/90 border-l border-dark-700/50 backdrop-blur-lg w-64">
+            <SheetContent
+              side="right"
+              className="bg-dark-900/90 border-l border-dark-700/50 backdrop-blur-lg w-64"
+            >
               <div className="flex flex-col space-y-4 mt-8">
                 {navItems.map((item) => {
                   const Icon = item.icon;
@@ -147,7 +159,7 @@ const Navbar = () => {
                     </Button>
                   );
                 })}
-                
+
                 {user && (
                   <Button
                     variant="ghost"
@@ -161,7 +173,7 @@ const Navbar = () => {
                     Track Product
                   </Button>
                 )}
-                
+
                 {user ? (
                   <>
                     <Button

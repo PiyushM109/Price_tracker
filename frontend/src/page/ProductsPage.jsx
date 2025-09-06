@@ -17,13 +17,13 @@ const ProductsPage = () => {
 
   useEffect(() => {
     // Check if user is logged in
-    fetch("http://localhost:3000/auth/user", { credentials: "include" })
+    fetch("/auth/user", { credentials: "include" })
       .then((res) => res.json())
       .then((userData) => {
         if (userData._id) {
           setUser(userData);
           // Fetch user's products
-          return axios.get("http://localhost:3000/user/products", {
+          return axios.get("/data/user/products", {
             withCredentials: true,
           });
         } else {

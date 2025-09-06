@@ -32,7 +32,7 @@ export default function Modal({ prodId }) {
     };
 
     axios
-      .post("https://price-tracker-server-cyan.vercel.app/product/addEmail", data)
+      .post("/data/product/addEmail", data)
       .then((_) => {
         setSuccess(true);
         setMessage("You've been subscribed to price alerts!");

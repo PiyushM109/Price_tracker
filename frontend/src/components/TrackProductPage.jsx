@@ -2,7 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 import { motion } from "framer-motion";
 import { Search, Package, TrendingDown, ShoppingCart } from "lucide-react";
 
@@ -37,7 +43,7 @@ const TrackProductPage = () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `http://localhost:3000/scrape?url=${encodeURIComponent(searchProduct)}`,
+        `/data/scrape?url=${encodeURIComponent(searchProduct)}`,
         { credentials: "include" }
       );
       const product = await response.json();
@@ -67,7 +73,9 @@ const TrackProductPage = () => {
                 <Package className="h-8 w-8 text-white" />
               </div>
             </div>
-            <CardTitle className="text-3xl font-bold text-white">Track a Product</CardTitle>
+            <CardTitle className="text-3xl font-bold text-white">
+              Track a Product
+            </CardTitle>
             <CardDescription className="text-gray-400 text-lg">
               Paste an Amazon product URL to start tracking its price
             </CardDescription>
@@ -95,14 +103,18 @@ const TrackProductPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
                 <div className="bg-dark-800/30 p-4 rounded-lg border border-dark-700">
                   <Search className="h-6 w-6 text-primary-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Find Product</h3>
+                  <h3 className="font-semibold text-white mb-1">
+                    Find Product
+                  </h3>
                   <p className="text-sm text-gray-400">
                     Paste any Amazon product URL to begin tracking
                   </p>
                 </div>
                 <div className="bg-dark-800/30 p-4 rounded-lg border border-dark-700">
                   <TrendingDown className="h-6 w-6 text-primary-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Track Prices</h3>
+                  <h3 className="font-semibold text-white mb-1">
+                    Track Prices
+                  </h3>
                   <p className="text-sm text-gray-400">
                     We'll monitor the price and alert you to drops
                   </p>

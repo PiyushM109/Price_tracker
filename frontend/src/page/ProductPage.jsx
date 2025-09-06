@@ -37,14 +37,14 @@ const ProductPage = () => {
 
   useEffect(() => {
     // Check if user is logged in
-    fetch("http://localhost:3000/auth/user", { credentials: "include" })
+    fetch("/auth/user", { credentials: "include" })
       .then((res) => res.json())
       .then((userData) => {
         if (userData._id) {
           setUser(userData);
         }
         // Fetch product data
-        return axios.get(`http://localhost:3000/product/${prodId}`);
+        return axios.get(`/data/product/${prodId}`);
       })
       .then((response) => {
         setProductInfo(response.data);

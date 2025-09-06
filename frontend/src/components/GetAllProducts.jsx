@@ -11,22 +11,23 @@ function GetAllProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // Fetch products sorted by number of users tracking them
-    axios
-      .get("https://price-tracker-server-cyan.vercel.app/allProduct")
-      .then((response) => {
-        // Sort products by number of users tracking them (descending)
-        const sortedProducts = response.data.sort((a, b) => 
+  const getAllProducts = async () => {
+    try {
+      const res = await axios.get("/data/allProduct");
+      const sortedProducts = res.data.allProducts.sort(
+        (a, b) =>
           (b.users ? b.users.length : 0) - (a.users ? a.users.length : 0)
-        );
-        setProducts(sortedProducts);
-        setLoading(false);
-      })
-      .catch((_) => {
-        setError("Failed to load products. Please try again later.");
-        setLoading(false);
-      });
+      );
+      setProducts(sortedProducts);
+      setLoading(false);
+    } catch (error) {
+      setError("Failed to load products. Please try again later.");
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllProducts();
   }, []);
 
   if (loading) {
@@ -36,10 +37,12 @@ function GetAllProducts() {
           <div className="inline-flex items-center justify-center p-3 rounded-full bg-primary-500/10 mb-4">
             <Users className="h-8 w-8 text-primary-400" />
           </div>
-          <h2 className="text-3xl font-bold mb-2 text-white">Most Tracked Products</h2>
+          <h2 className="text-3xl font-bold mb-2 text-white">
+            Most Tracked Products
+          </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            <TypingText 
-              text="Discover the most popular products tracked by our users" 
+            <TypingText
+              text="Discover the most popular products tracked by our users"
               speed={30}
             />
           </p>
@@ -63,9 +66,7 @@ function GetAllProducts() {
         <Alert variant="destructive" className="bg-red-900/20 border-red-500">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            {error}
-          </AlertDescription>
+          <AlertDescription>{error}</AlertDescription>
         </Alert>
       </div>
     );
@@ -77,10 +78,12 @@ function GetAllProducts() {
         <div className="inline-flex items-center justify-center p-3 rounded-full bg-primary-500/10 mb-4">
           <Users className="h-8 w-8 text-primary-400" />
         </div>
-        <h2 className="text-3xl font-bold mb-2 text-white">Most Tracked Products</h2>
+        <h2 className="text-3xl font-bold mb-2 text-white">
+          Most Tracked Products
+        </h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          <TypingText 
-            text="Discover the most popular products tracked by our users" 
+          <TypingText
+            text="Discover the most popular products tracked by our users"
             speed={30}
           />
         </p>
@@ -92,7 +95,9 @@ function GetAllProducts() {
             <div className="bg-dark-700 rounded-full p-4 w-16 h-16 flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="h-8 w-8 text-gray-400" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">No Products Found</h3>
+            <h3 className="text-xl font-semibold text-white mb-2">
+              No Products Found
+            </h3>
             <p className="text-gray-400 mb-4">
               No products found. Start tracking some products!
             </p>

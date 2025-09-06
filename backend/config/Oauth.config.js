@@ -1,32 +1,25 @@
 const passport = require("passport");
-import User from "../models/user";
+const User = require("../models/user");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+
+// Check for required environment variables
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+  console.error("Missing Google OAuth environment variables");
+  process.exit(1);
+}
 
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL:
+        process.env.CALLBACK_URL ||
+        "http://localhost:3000/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // Check if user already exists
-        let user = await User.findOne({ googleId: profile.id });
-
-        if (user) {
-          return done(null, user);
-        }
-
-        // Create new user
-        user = await User.create({
-          googleId: profile.id,
-          name: profile.displayName,
-          email: profile.emails[0].value,
-          avatar: profile.photos[0].value,
-        });
-
-        return done(null, user);
+        return done(null, profile);
       } catch (error) {
         return done(error, null);
       }
@@ -36,15 +29,12 @@ passport.use(
 
 // Serialize user for session
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user);
 });
 
 // Deserialize user from session
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (error) {
-    done(error, null);
-  }
+passport.deserializeUser((obj, done) => {
+  done(null, obj);
 });
+
+console.log("Google Passport strategy configured.");
