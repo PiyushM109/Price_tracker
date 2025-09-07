@@ -25,7 +25,7 @@ const googleOauth = async (req, res, next) => {
     } else {
       token = signToken(existingUser.email, existingUser._id);
     }
-    res.cookie("token", token);
+    res.cookie("token", token, { path: "/" });
     res.redirect(`${frontend}/products`);
     return;
   } catch (error) {
@@ -51,4 +51,17 @@ const getUser = async (req, res, next) => {
   }
 };
 
-module.exports = { googleOauth, getUser };
+const logOut = async (req, res, next) => {
+  try {
+    res.clearCookie("token", {
+      path: "/", // must match
+      httpOnly: true, // same as when set
+      sameSite: "lax", // or whatever you used
+      secure: process.env.NODE_ENV === "production",
+    });
+    res.redirect(`${frontend}/login`);
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports = { googleOauth, getUser, logOut };

@@ -6,7 +6,7 @@ import ProductPage from "./page/ProductPage";
 import ProductsPage from "./page/ProductsPage";
 import About from "./page/About";
 import Error from "./components/Error";
-import LoginPage from "./components/LoginPage";
+import LoginPage from "./page/LoginPage";
 import TrackProduct from "./page/TrackProduct";
 import "./index.css";
 

@@ -96,7 +96,7 @@ const scrapeData = async (req, res, next) => {
 const getAllProducts = async (req, res, next) => {
   try {
     const allProducts = await await Product.find()
-      .sort({ createdAt: -1 }) 
+      .sort({ createdAt: -1 })
       .limit(6);
     res.status(200).json({
       success: true,

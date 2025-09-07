@@ -1,6 +1,10 @@
 const Router = require("express");
 const passport = require("passport");
-const { googleOauth, getUser } = require("../controllers/authController");
+const {
+  googleOauth,
+  getUser,
+  logOut,
+} = require("../controllers/authController");
 const verifyToken = require("../middlewares/Jwt_middlewares");
 
 const authRouter = Router();
@@ -16,11 +20,7 @@ authRouter.get(
   googleOauth
 );
 
-authRouter.get("/logout", (req, res) => {
-  req.logout(() => {
-    res.redirect("/");
-  });
-});
+authRouter.post("/logout", verifyToken, logOut);
 
 authRouter.get("/user", verifyToken, getUser);
 

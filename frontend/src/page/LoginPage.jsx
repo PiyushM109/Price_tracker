@@ -1,16 +1,17 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../components/ui/card";
 import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
 import { Package, TrendingUp, Bell, BarChart3 } from "lucide-react";
+import { getToken } from "../lib/authUtil";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -20,15 +21,10 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    // Check if user is already logged in
-    fetch("/auth/user", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data._id) {
-          navigate("/products");
-        }
-      })
-      .catch((err) => console.log(err));
+    const token = getToken();
+    if (token) {
+      navigate("/products");
+    }
   }, [navigate]);
 
   return (

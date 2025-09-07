@@ -12,6 +12,7 @@ import {
   LogOut,
   Plus,
 } from "lucide-react";
+import { getToken, deleteToken } from "../lib/authUtil";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,27 +20,28 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      navigate("/login");
+    }
     // Check if user is logged in
-    fetch("/auth/user", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data._id) {
-          setUser(data);
-        }
-      })
-      .catch((err) => console.log(err));
+    // fetch("/auth/user", { credentials: "include" })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     if (data._id) {
+    //       setUser(data);
+    //     }
+    //   })
+    //   .catch((err) => console.log(err));
   }, []);
 
-  const handleLogout = () => {
-    fetch("/auth/logout", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then(() => {
-        setUser(null);
-        navigate("/");
-      })
-      .catch((err) => console.log(err));
+  const handleLogout = async () => {
+    await axios.post(
+      "/auth/logout",
+      {},
+      { headers: { authorization: `bearer ${token}` } }
+    );
+    deleteToken();
   };
 
   const navItems = [

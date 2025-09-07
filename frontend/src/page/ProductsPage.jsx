@@ -6,7 +6,7 @@ import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
 import { AlertCircle, Plus, Package } from "lucide-react";
-import TypingText from "../components/TypingText";
+import { getToken } from "../lib/authUtil";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -15,33 +15,59 @@ const ProductsPage = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if user is logged in
-    fetch("/auth/user", { credentials: "include" })
-      .then((res) => res.json())
-      .then((userData) => {
-        if (userData._id) {
-          setUser(userData);
-          // Fetch user's products
-          return axios.get("/data/user/products", {
-            withCredentials: true,
-          });
-        } else {
-          // Redirect to login if not authenticated
-          navigate("/login");
-          return null;
-        }
-      })
-      .then((response) => {
-        if (response && response.data) {
-          setProducts(response.data);
-        }
-        setLoading(false);
-      })
-      .catch((_) => {
-        setError("Failed to load products. Please try again later.");
-        setLoading(false);
+  const getProducts = async (token) => {
+    setLoading(true);
+    try {
+      const res = await axios.get("/data/user/products", {
+        headers: {
+          authorization: `bearer ${token}`,
+        },
       });
+      if (res.data.success) {
+        setProducts(res.data.products);
+      } else {
+        setError("Failed to load products. Please try again later.");
+      }
+    } catch (error) {
+      console.log(error);
+      setError("internal error occured");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    getProducts(token);
+    // Check if user is logged in
+    // fetch("/auth/user", { credentials: "include" })
+    //   .then((res) => res.json())
+    //   .then((userData) => {
+    //     if (userData._id) {
+    //       setUser(userData);
+    //       // Fetch user's products
+    //       return axios.get("/data/user/products", {
+    //         withCredentials: true,
+    //       });
+    //     } else {
+    //       // Redirect to login if not authenticated
+    //       navigate("/login");
+    //       return null;
+    //     }
+    //   })
+    //   .then((response) => {
+    //     if (response && response.data) {
+    //       setProducts(response.data);
+    //     }
+    //     setLoading(false);
+    //   })
+    //   .catch((_) => {
+    //     setError("Failed to load products. Please try again later.");
+    //     setLoading(false);
+    //   });
   }, [navigate]);
 
   if (loading) {
