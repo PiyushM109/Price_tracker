@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import PriceCard from "../components/PriceCard";
 import TypingText from "../components/TypingText";
+import { getToken } from "../lib/authUtil";
 
 const ProductPage = () => {
   const [productInfo, setProductInfo] = useState(null);
@@ -35,25 +36,27 @@ const ProductPage = () => {
   const { prodId } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if user is logged in
-    fetch("/auth/user", { credentials: "include" })
-      .then((res) => res.json())
-      .then((userData) => {
-        if (userData._id) {
-          setUser(userData);
-        }
-        // Fetch product data
-        return axios.get(`/data/product/${prodId}`);
-      })
-      .then((response) => {
-        setProductInfo(response.data);
-        setLoading(false);
-      })
-      .catch((_) => {
-        setError("Failed to load product details. Please try again later.");
-        setLoading(false);
+  const getProduct = async (token) => {
+    try {
+      const res = await axios.get(`/data/product/${prodId}`, {
+        headers: { authorization: `bearer ${token}` },
       });
+      setProductInfo(res.data.product);
+    } catch (error) {
+      console.log(error);
+      setError("Failed to load product details. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    getProduct(token);
   }, [prodId]);
 
   if (loading) {
@@ -244,26 +247,18 @@ const ProductPage = () => {
               </CardContent>
             </Card>
 
-            {!user && (
-              <div className="mt-8">
-                <h2 className="text-xl font-bold mb-4 text-white">
-                  Track This Product
-                </h2>
-                <p className="text-gray-300 mb-4">
-                  <TypingText
-                    text="Sign in to get notified when the price drops or the product goes on sale. Start tracking to never miss a deal!"
-                    speed={30}
-                  />
-                </p>
-                <Button
-                  className="w-full py-6 text-lg rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600"
-                  onClick={() => navigate("/login")}
-                >
-                  <Bell className="mr-2 h-5 w-5" />
-                  Sign In to Track This Product
-                </Button>
-              </div>
-            )}
+            <div className="mt-8">
+              <h2 className="text-xl font-bold mb-4 text-white">
+                Track This Product
+              </h2>
+              <Button
+                className="w-full py-6 text-lg rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600"
+                onClick={() => navigate("/login")}
+              >
+                <Bell className="mr-2 h-5 w-5" />
+                Track This Product
+              </Button>
+            </div>
           </div>
         </div>
 

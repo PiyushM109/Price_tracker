@@ -1,21 +1,22 @@
 const cheerio = require("cheerio");
 
-const extractPrice=(...elements)=> {
+const extractPrice = (...elements) => {
   for (const element of elements) {
     const priceText = element.text().trim();
     if (priceText) return priceText.replace(/[^\d.]/g, "");
   }
 
   return "";
-}
+};
 
-const extractCurrency = (element) =>{
+const extractCurrency = (element) => {
   const currencyText = element.text().trim().slice(0, 1);
   return currencyText ? currencyText : "";
-}
+};
 
-const dataExtractor= (response, url)=> {
+const dataExtractor = (response, url) => {
   const $ = cheerio.load(response.data);
+  console.log({ $ });
   const title = $("#productTitle").text().trim();
   // const currPrice = $(".priceToPay span.a-price-whole").text().trim();
   const currPrice = extractPrice(
@@ -64,6 +65,6 @@ const dataExtractor= (response, url)=> {
     highestPrice: Number(originalPrice),
   };
   return data;
-}
+};
 
 module.exports = { dataExtractor, extractPrice, extractCurrency };

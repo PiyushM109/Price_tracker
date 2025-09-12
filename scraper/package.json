@@ -1,0 +1,19 @@
+{
+  "name": "scraper",
+  "version": "1.0.0",
+  "description": "amazon web scrapper",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx tsc -b && node ./dist/index.js"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.3",
+    "axios": "^1.12.1",
+    "cheerio": "^1.1.2",
+    "express": "^5.1.0",
+    "typescript": "^5.9.2"
+  }
+}

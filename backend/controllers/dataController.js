@@ -14,7 +14,7 @@ const {
 
 const scrapeData = async (req, res, next) => {
   const url = req.query.url;
-  // console.log(url);
+  console.log({ url });
   const username = String(process.env.BRIGHT_DATA_USERNAME);
   const password = String(process.env.BRIGHT_DATA_PASSWORD);
 
@@ -32,8 +32,9 @@ const scrapeData = async (req, res, next) => {
 
   try {
     const response = await axios.get(url, options);
+    console.log({ response });
     const data = await dataExtractor(response, url);
-    // console.log(data);
+    console.log({ data });
     let productData = { ...data };
     // console.log(productData);
     const existingProduct = await Product.findOne({ url: data.url });
@@ -45,7 +46,7 @@ const scrapeData = async (req, res, next) => {
         date: Date.now(),
       });
 
-      // console.log(existingProduct.priceHistory);
+      console.log(existingProduct.priceHistory);
 
       (existingProduct.lowestPrice = getLowestPrice(
         existingProduct.priceHistory
