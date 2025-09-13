@@ -74,8 +74,8 @@ export const fetchProduct = async (url: string) => {
       .trim();
 
     // Clean and convert to number
-    const mrpValue = parseInt(mrpText.replace(/[^\d]/g, ""), 10);
-    console.log({ mrpText, mrpValue });
+    const mrpValue = parseFloat(mrpText.replace(/[^\d.]/g, ""));
+    // console.log({ mrpText, mrpValue });
 
     let ratingText = $("#averageCustomerReviews .a-icon-alt")
       .text()
@@ -93,10 +93,10 @@ export const fetchProduct = async (url: string) => {
       : 0;
 
     const outOfStock =
-      $("#availability  span.a-size-medium.a-color-success")
+      ($("#availability  span.a-size-medium.a-color-success")
         .text()
         .trim()
-        .toLowerCase() === "currently unavailable.";
+        .toLowerCase() === "currently unavailable.") || false;
 
     const images =
       ($("#imgBlkFront").attr("data-a-dynamic-image") as string) ||
@@ -105,7 +105,7 @@ export const fetchProduct = async (url: string) => {
     const imageUrls = Object.keys(JSON.parse(images));
 
     const currency = extractCurrency($(".a-price-symbol"));
-    const discountRate = $(".savingsPercentage").text().replace(/[-%]/g, "");
+    const discountRate = $(".savingsPercentage").text().replace(/[- %]/g, "");
 
     const data = {
       success: true,
