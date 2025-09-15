@@ -28,8 +28,9 @@ type Data = {
   highestPrice?: number;
 };
 
-app.get("/getProduct", async (req: Request, res: Response) => {
+app.post("/getProduct", async (req: Request, res: Response) => {
   try {
+    console.log(req.body);
     const { url }: { url: string } = req.body;
     if (!url) {
       res.status(400).json({
