@@ -247,7 +247,7 @@ const ProductPage = () => {
               </CardContent>
             </Card>
 
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <h2 className="text-xl font-bold mb-4 text-white">
                 Track This Product
               </h2>
@@ -258,7 +258,7 @@ const ProductPage = () => {
                 <Bell className="mr-2 h-5 w-5" />
                 Track This Product
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
 

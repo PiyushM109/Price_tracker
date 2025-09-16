@@ -7,87 +7,71 @@ const {
   getHighestPrice,
   getAveragePrice,
 } = require("../utils/price-utils.js");
-const {
-  generateEmailBody,
-  sendEmail,
-} = require("../nodeMailer/node_mailer.js");
+const generateEmailBody = require("../nodeMailer/mail_util.js");
+const mailSender = require("../nodeMailer/node_mailer.js");
 
 const scrapeData = async (req, res, next) => {
   const url = req.query.url;
-  console.log({ url });
-  const username = String(process.env.BRIGHT_DATA_USERNAME);
-  const password = String(process.env.BRIGHT_DATA_PASSWORD);
-
-  const port = 22225;
-  const session_id = (1000000 * Math.random()) | 0;
-  const options = {
-    auth: {
-      username: `${username}-session-${session_id}`,
-      password,
-    },
-    host: "brd.superproxy.io",
-    port,
-    rejectUnauthorized: false,
-  };
 
   try {
-    const response = await axios.get(url, options);
-    console.log({ response });
-    const data = await dataExtractor(response, url);
-    console.log({ data });
+    const rsp = await axios.post("http://localhost:3001/getProduct", {
+      url,
+    });
+    let data = rsp.data.data;
+    console.log({ data: rsp.data.data });
     let productData = { ...data };
     // console.log(productData);
     const existingProduct = await Product.findOne({ url: data.url });
     // console.log(existingProduct);
 
-    if (existingProduct) {
-      let updatedPriceHistory = existingProduct.priceHistory.push({
-        price: data.currPrice,
-        date: Date.now(),
-      });
+    // if (existingProduct) {
+    //   let updatedPriceHistory = existingProduct.priceHistory.push({
+    //     price: data.currPrice,
+    //     date: Date.now(),
+    //   });
 
-      console.log(existingProduct.priceHistory);
+    //   console.log(existingProduct.priceHistory);
 
-      (existingProduct.lowestPrice = getLowestPrice(
-        existingProduct.priceHistory
-      )),
-        (existingProduct.highestPrice = getHighestPrice(
-          existingProduct.priceHistory
-        )),
-        (existingProduct.averagePrice = getAveragePrice(
-          existingProduct.priceHistory
-        ));
+    //   (existingProduct.lowestPrice = getLowestPrice(
+    //     existingProduct.priceHistory
+    //   )),
+    //     (existingProduct.highestPrice = getHighestPrice(
+    //       existingProduct.priceHistory
+    //     )),
+    //     (existingProduct.averagePrice = getAveragePrice(
+    //       existingProduct.priceHistory
+    //     ));
 
-      // console.log(existingProduct);
-      productData = existingProduct;
-      // console.log(productData);
-    }
+    //   // console.log(existingProduct);
+    //   productData = existingProduct;
+    //   // console.log(productData);
+    // }
 
-    const newProduct = await Product.findOneAndUpdate(
-      { url: data.url },
-      productData,
-      { upsert: true, new: true }
-    );
+    // const newProduct = await Product.findOneAndUpdate(
+    //   { url: data.url },
+    //   productData,
+    //   { upsert: true, new: true }
+    // );
 
-    // If user is authenticated, add product to their tracked products
-    if (req.user) {
-      // Add user to product's users array if not already there
-      if (!newProduct.users.includes(req.user.id)) {
-        newProduct.users.push(req.user.id);
-        await newProduct.save();
-      }
+    // // If user is authenticated, add product to their tracked products
+    // if (req.user) {
+    //   // Add user to product's users array if not already there
+    //   if (!newProduct.users.includes(req.user.id)) {
+    //     newProduct.users.push(req.user.id);
+    //     await newProduct.save();
+    //   }
 
-      // Add product to user's products array if not already there
-      const user = await User.findById(req.user.id);
-      if (!user.products.includes(newProduct._id)) {
-        user.products.push(newProduct._id);
-        await user.save();
-      }
-    }
+    //   // Add product to user's products array if not already there
+    //   const user = await User.findById(req.user.id);
+    //   if (!user.products.includes(newProduct._id)) {
+    //     user.products.push(newProduct._id);
+    //     await user.save();
+    //   }
+    // }
 
-    // console.log(newProduct);
+    // // console.log(newProduct);
 
-    res.send(newProduct);
+    res.send(productData);
   } catch (e) {
     console.log(e);
     next(e);
@@ -138,6 +122,46 @@ const getUserProducts = async (req, res, next) => {
   }
 };
 
+const startTracking = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const { product } = req.body;
+    if (!product) {
+      res.status(404).json({
+        success: false,
+        message: "Product Data not found",
+      });
+      return;
+    }
+    const { subject, body } = await generateEmailBody(product, "WELCOME");
+    // console.log(subject, body);
+    const info = mailSender(user.email, subject, body);
+    const existingProduct = await Product.findOne({ url: product.url });
+    if (existingProduct) {
+      const updated = await Product.findByIdAndUpdate(
+        existingProduct._id,
+        { $addToSet: { users: user.id } },
+        { new: true }
+      );
+      res.status(200).json({
+        success: true,
+        message: "product added successfully",
+        product: updated,
+      });
+    }
+    const newProduct = await Product.create({
+      ...product,
+      users: [user.id],
+    });
+    res.status(200).json({
+      success: true,
+      message: "product added successfully",
+      product: newProduct,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 //need to work on this
 const addEmail = async (req, res) => {
   const { userEmail, prodId } = req.body;
@@ -180,4 +204,5 @@ module.exports = {
   getProductById,
   getUserProducts,
   addEmail,
+  startTracking,
 };
