@@ -18,7 +18,7 @@ const scrapeData = async (req, res, next) => {
       url,
     });
     let data = rsp.data.data;
-    console.log({ data: rsp.data.data });
+    // console.log({ data: rsp.data.data });
     let productData = { ...data };
     // console.log(productData);
     const existingProduct = await Product.findOne({ url: data.url });
@@ -113,6 +113,7 @@ const getProductById = async (req, res, next) => {
 const getUserProducts = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).populate("products");
+    console.log(user);
     res.status(200).json({
       success: true,
       products: user.products,
@@ -143,6 +144,9 @@ const startTracking = async (req, res, next) => {
         { $addToSet: { users: user.id } },
         { new: true }
       );
+      await User.findByIdAndUpdate(user.id, {
+        $addToSet: { products: updated._id },
+      });
       res.status(200).json({
         success: true,
         message: "product added successfully",
@@ -153,6 +157,10 @@ const startTracking = async (req, res, next) => {
       ...product,
       users: [user.id],
     });
+    const update = await User.findByIdAndUpdate(user.id, {
+      $addToSet: { products: newProduct._id },
+    });
+    // console.log({ update });
     res.status(200).json({
       success: true,
       message: "product added successfully",

@@ -7,6 +7,7 @@ const authRouter = require("./routes/authRoutes.js");
 const dataRouter = require("./routes/dataRoutes.js");
 const connectDb = require("./config/db.config.js");
 const errorHandler = require("./middlewares/errorHandler.js");
+const path = require("path");
 require("./config/Oauth.config.js");
 
 const app = express();
@@ -35,15 +36,18 @@ app.use(
   })
 );
 
+app.use(express.static(path.join(__dirname, "dist")));
+
 // Passport configuration
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/auth", authRouter);
 app.use("/data", dataRouter);
 
-// cron.schedule("*/2 * * * *", updater);
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
-// updater();
 app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {

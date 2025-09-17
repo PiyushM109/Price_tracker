@@ -13,10 +13,11 @@ import {
   Plus,
 } from "lucide-react";
 import { getToken, deleteToken } from "../lib/authUtil";
+import axios from "axios";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,6 +25,7 @@ const Navbar = () => {
     if (!token) {
       navigate("/login");
     }
+    setToken(token);
     // Check if user is logged in
     // fetch("/auth/user", { credentials: "include" })
     //   .then((res) => res.json())
@@ -36,12 +38,15 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = async () => {
+    console.log("logout called");
     await axios.post(
       "/auth/logout",
       {},
       { headers: { authorization: `bearer ${token}` } }
     );
     deleteToken();
+    setToken(null);
+    navigate("/login");
   };
 
   const navItems = [
@@ -82,7 +87,7 @@ const Navbar = () => {
             );
           })}
 
-          {user && (
+          {token && (
             <Button
               variant="ghost"
               size="sm"
@@ -97,7 +102,7 @@ const Navbar = () => {
 
         {/* User Actions */}
         <div className="flex items-center space-x-2">
-          {user ? (
+          {token ? (
             <>
               <Button
                 variant="ghost"
@@ -108,6 +113,7 @@ const Navbar = () => {
                 <User className="h-5 w-5" />
               </Button>
               <Button
+                title="logout"
                 variant="ghost"
                 size="icon"
                 className="text-gray-300 hover:text-white hover:bg-dark-800/50 rounded-lg transition-all duration-300"
@@ -162,7 +168,7 @@ const Navbar = () => {
                   );
                 })}
 
-                {user && (
+                {token && (
                   <Button
                     variant="ghost"
                     className="text-left text-lg font-medium text-gray-300 hover:text-white hover:bg-dark-800/50 justify-start h-12 px-4 transition-all duration-300"
@@ -176,7 +182,7 @@ const Navbar = () => {
                   </Button>
                 )}
 
-                {user ? (
+                {token ? (
                   <>
                     <Button
                       variant="ghost"
