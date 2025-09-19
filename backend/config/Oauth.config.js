@@ -1,6 +1,7 @@
 const passport = require("passport");
 const User = require("../models/user");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const frontend = process.env.FRONTEND_URL;
 
 // Check for required environment variables
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
@@ -14,8 +15,7 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL:
-        process.env.CALLBACK_URL ||
-        "http://localhost:3000/auth/google/callback",
+        process.env.CALLBACK_URL || `${frontend}/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
