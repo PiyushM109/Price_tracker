@@ -38,12 +38,14 @@ const productSchema = mongoose.Schema(
     averagePrice: { type: Number },
     discountRate: { type: Number },
     description: { type: String },
+    stars: { type: Number },
     category: { type: String },
     reviewsCount: { type: Number },
     isOutOfStock: { type: Boolean, default: false },
     users: [
       {
-        email: { type: String, required: true },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
       },
     ],
   },
