@@ -69,5 +69,5 @@ app.post("/getProduct", async (req: Request, res: Response) => {
 });
 
 app.listen(3001, () => {
-  console.log("the app is running on port 3000");
+  console.log("the app is running on port 3001");
 });

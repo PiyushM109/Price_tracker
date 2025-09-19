@@ -52,7 +52,7 @@ const Navbar = () => {
   const navItems = [
     { name: "Home", href: "/", icon: Home },
     { name: "Products", href: "/products", icon: Package },
-    { name: "About", href: "/about", icon: Info },
+    // { name: "About", href: "/about", icon: Info },
   ];
 
   return (

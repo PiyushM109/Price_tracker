@@ -47,6 +47,6 @@ app.post("/getProduct", async (req, res) => {
     }
 });
 app.listen(3001, () => {
-    console.log("the app is running on port 3000");
+    console.log("the app is running on port 3001");
 });
 //# sourceMappingURL=index.js.map

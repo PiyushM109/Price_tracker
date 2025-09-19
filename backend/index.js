@@ -13,12 +13,12 @@ require("./config/Oauth.config.js");
 const app = express();
 
 // Configure CORS to allow credentials
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//   })
+// );
 
 app.use(express.json());
 

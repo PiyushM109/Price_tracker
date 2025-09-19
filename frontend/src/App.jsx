@@ -45,10 +45,10 @@ const appRouter = createBrowserRouter([
         path: "/track",
         element: <TrackProduct />,
       },
-      {
-        path: "/about",
-        element: <About />,
-      },
+      // {
+      //   path: "/about",
+      //   element: <About />,
+      // },
       {
         path: "/product/:prodId",
         element: <ProductPage />,

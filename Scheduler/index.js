@@ -15,9 +15,8 @@ const startServer = async () => {
     });
     console.log("Connected to MongoDB");
 
-    // Schedule the update to run every hour
     cron.schedule(
-      "* * * * *",
+      "0 0 * * *",
       () => {
         console.log("Running product update...");
         updateProducts();

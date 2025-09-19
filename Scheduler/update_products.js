@@ -14,7 +14,7 @@ const updateProducts = async () => {
       if (!url) {
         continue;
       }
-      const response = await axios.post("http://localhost:3000/getProduct", {
+      const response = await axios.post(process.env.SCRAPPER_URL, {
         url,
       });
 
@@ -62,7 +62,7 @@ const updateProducts = async () => {
         const userEmails = product.users.map((user) => user.email);
         await mailSender(userEmails, subject, body);
       }
-      console.log({ product, priceData });
+      // console.log({ product, priceData });
       await delay(2000); // 5-second delay
     }
   } catch (error) {
