@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 // TODO: Move these URLs to a .env file
-const SCRAPER_URL = process.env.SCRAPER_URL;
+const SCRAPER_URL = process.env.SCRAPPER;
 
 let servicesReady = false;
 
