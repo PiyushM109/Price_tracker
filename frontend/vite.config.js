@@ -16,6 +16,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      "/initialize-scaraper": {
+        target: apiUrl,
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });

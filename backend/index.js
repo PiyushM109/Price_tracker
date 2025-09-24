@@ -8,6 +8,7 @@ const dataRouter = require("./routes/dataRoutes.js");
 const connectDb = require("./config/db.config.js");
 const errorHandler = require("./middlewares/errorHandler.js");
 const path = require("path");
+const { waitForServices, areServicesReady } = require("./utils/healthCheck.js");
 require("./config/Oauth.config.js");
 
 const app = express();
@@ -44,6 +45,18 @@ app.use(passport.session());
 app.use("/auth", authRouter);
 app.use("/data", dataRouter);
 
+app.get("/initialize-scaraper", (req, res) => {
+  try {
+    waitForServices();
+    res.json({
+      success: true,
+      message: "trying to intialize the scrapper",
+    });
+  } catch (error) {
+    throw error;
+  }
+});
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
@@ -53,4 +66,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
   await connectDb();
   console.log(`server is running on port ${PORT}`);
+  waitForServices();
 });

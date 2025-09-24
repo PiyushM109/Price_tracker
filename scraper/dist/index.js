@@ -2,10 +2,9 @@ import express, {} from "express";
 import { fetchProduct, isAmazonUrl } from "./scrapper.js";
 const app = express();
 app.use(express.json());
-const main = async () => {
-    const data = await fetchProduct("https://www.amazon.in/BassHeads-102-Earphones-Multi-Function-Microphone/dp/B07S8PSW59/?_encoding=UTF8&ref_=pd_hp_d_btf_ci_mcx_mr_ca_id_hp_d");
-    console.log(data);
-};
+app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok" });
+});
 app.post("/getProduct", async (req, res) => {
     try {
         console.log(req.body);
@@ -46,7 +45,7 @@ app.post("/getProduct", async (req, res) => {
         });
     }
 });
-app.listen(3001, () => {
-    console.log("the app is running on port 3001");
+app.listen(3002, () => {
+    console.log("the app is running on port 3002");
 });
 //# sourceMappingURL=index.js.map

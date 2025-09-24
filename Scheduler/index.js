@@ -2,6 +2,7 @@ const express = require("express");
 const cron = require("node-cron");
 const mongoose = require("mongoose");
 const updateProducts = require("./update_products");
+const { waitForServices, areServicesReady } = require("./utils/healthCheck.js");
 require("./models/User");
 require("dotenv").config();
 
@@ -14,11 +15,11 @@ const startServer = async () => {
       useUnifiedTopology: true,
     });
     console.log("Connected to MongoDB");
-
     cron.schedule(
       "0 0 * * *",
-      () => {
+      async () => {
         console.log("Running product update...");
+        await waitForServices();
         updateProducts();
       },
       {

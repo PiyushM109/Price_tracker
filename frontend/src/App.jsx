@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
@@ -8,9 +9,13 @@ import About from "./page/About";
 import Error from "./components/Error";
 import LoginPage from "./page/LoginPage";
 import TrackProduct from "./page/TrackProduct";
+import axios from "axios";
 import "./index.css";
 
 const App = () => {
+  useEffect(() => {
+    axios.get("/initialize-scaraper");
+  }, []);
   return (
     <div className="app bg-dark-900 min-h-screen flex flex-col">
       <Navbar />
